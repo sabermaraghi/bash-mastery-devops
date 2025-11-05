@@ -1,0 +1,15 @@
+# Temp files
+*.log
+*.tmp
+temp/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+*.swp
+
+# Bash specifics
+*.bak
