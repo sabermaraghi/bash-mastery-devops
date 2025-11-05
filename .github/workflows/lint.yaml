@@ -26,5 +26,6 @@ jobs:
       - name: Install shellcheck
         run: sudo apt-get update && sudo apt-get install -y shellcheck
       - name: Run shellcheck on scripts
-        run: find scripts/ -name '*.sh' -exec shellcheck ##--severity=error {} +
-        
+        run: find scripts/ -name '*.sh' -exec shellcheck --severity=error {} +
+      - name: Run arguments.sh with inputs
+        run: bash scripts/basics/arguments.sh ${{ inputs.first_arg }} ${{ inputs.second_arg }}
