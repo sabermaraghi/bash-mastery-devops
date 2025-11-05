@@ -5,7 +5,18 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
-
+  workflow_dispatch:  # اضافه کن
+    inputs:
+      first_arg:  # input اول
+        description: 'First argument for script'
+        required: true
+        default: 'hello'
+        type: string
+      second_arg:  # input دوم
+        description: 'Second argument for script'
+        required: true
+        default: 'world'
+        type: string
 jobs:
   lint:
     runs-on: ubuntu-latest
