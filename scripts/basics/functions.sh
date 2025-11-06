@@ -1,4 +1,6 @@
-# Functions
+#!/bin/bash
+set -euo pipefail
+
 greet() {
   local name="$1"           # local → ﻒﻘﻃ ﺩﺎﺨﻟ ﻑﺎﻨﮑﺸﻧ ﺪﯾﺪﻫ ﻢﯿﺸﻫ
   local timestamp=$(date +%F_%H:%M:%S)
@@ -30,7 +32,7 @@ get_system_info() {
   local info=()
   info+=("user:$(whoami)")
   info+=("host:$(hostname)")
-  info+=("uptime:$(uptime -p)")
+#  info+=("uptime:$(uptime -p)")
   SYSTEM_INFO=("${info[@]}")  # global array
 }
 get_system_info
