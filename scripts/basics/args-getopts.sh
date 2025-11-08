@@ -24,6 +24,7 @@ echo "Name: $name, Age: $age"
 
 
 
+
 #!/bin/bash
 #set -euo pipefail
 
