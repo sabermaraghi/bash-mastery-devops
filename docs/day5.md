@@ -4,7 +4,7 @@
 
 ## 1. Array Types in Bash
 
-```bash
+
 # Indexed Array (classic)
 fruits=("apple" "banana" "cherry")
 echo "First fruit: ${fruits[0]}"
@@ -69,4 +69,15 @@ UP: github.com
 ...
 Completed: 1000 hosts in 1.87 seconds
 
+## How to use k8s-cleaner:
+# 1. Test run (RECOMMENDED FIRST)
+DRY_RUN=true ./k8s-cleaner.sh
 
+# 2. Real cleanup with more parallel jobs
+MAX_PARALLEL=20 ./k8s-cleaner.sh
+
+# 3. Only specific namespaces
+NAMESPACES=("default" "staging" "prod") ./k8s-cleaner.sh
+
+# 4. Add to crontab (every 15 minutes)
+*/15 * * * * /path/to/k8s-cleaner.sh >/dev/null 2>&1
