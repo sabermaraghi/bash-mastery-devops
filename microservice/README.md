@@ -56,3 +56,20 @@ curl -X POST http://localhost:8003/rotate \
   -H "Authorization: Bearer dev-token-123" \
   -H "Content-Type: application/json" \
   -d '{"secret_name": "test", "provider": "aws"}'
+
+
+
+
+
+## Cost-api Microservice
+
+cd microservice/cost/docker
+./build.sh
+podman run -d -p 8004:8000 -e COST_API_TOKEN=finops-token-123 localhost/cost-api:v1.0.0
+
+# Test
+
+curl -X POST http://localhost:8004/analyze \
+  -H "Authorization: Bearer finops-token-123" \
+  -H "Content-Type: application/json" \
+  -d '{"provider": "aws", "days": 7, "budget_threshold": 100}'

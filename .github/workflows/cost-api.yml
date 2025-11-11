@@ -1,0 +1,39 @@
+name: Cost API - Secure CI/CD
+
+on:
+  push:
+    paths: ['microservice/cost/**']
+
+jobs:
+  build-sign-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Image
+        run: cd microservice/cost && ./docker/build.sh
+
+      - name: Generate SBOM
+        run: syft localhost/cost-api:v1.0.0 -o cyclonedx-json > sbom-cost.json
+
+      - name: Scan with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: localhost/cost-api:v1.0.0
+          format: sarif
+          output: trivy-cost.sarif
+          severity: CRITICAL,HIGH
+          exit-code: 1
+
+      - name: Sign with Cosign
+        run: cosign sign --yes localhost/cost-api:v1.0.0
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-cost.sarif
