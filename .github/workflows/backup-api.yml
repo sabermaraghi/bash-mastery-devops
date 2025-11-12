@@ -16,10 +16,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Fix script permissions
+        run: bash common/setup.sh
+      
       - name: Build with Buildah
         run: |
           cd microservice/backup/docker
-          ./build.sh
+          bash ./build.sh
 
       - name: Generate SBOM
         run: |

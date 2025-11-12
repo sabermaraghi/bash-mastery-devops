@@ -19,6 +19,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Fix script permissions
+        run: bash common/setup.sh
+
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
         env: 

@@ -5,6 +5,7 @@ on:
     paths: ['microservice/deploy/**']
 
 jobs:
+
   build-sign-scan:
     runs-on: ubuntu-latest
     permissions:
@@ -15,8 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Fix script permissions
+        run: bash common/setup.sh
+
       - name: Build Image
-        run: cd microservice/deploy && ./docker/build.sh
+        run: cd microservice/deploy && bash ./docker/build.sh
 
       - name: Generate SBOM
         run: syft localhost/deploy-api:v1.0.0 -o cyclonedx-json > sbom-deploy.json

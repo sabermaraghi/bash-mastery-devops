@@ -10,10 +10,15 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: Fix script permissions
+        run: bash common/setup.sh
+
       - name: Install Tools
         run: |
           curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh
           curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
+
       - name: Build & Secure
         run: |
           for svc in backup deploy health secret cost; do
