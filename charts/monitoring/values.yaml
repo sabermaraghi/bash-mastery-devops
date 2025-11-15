@@ -1,3 +1,7 @@
+slack:
+  webhook_url: "https://hooks.slack.com/services/PLACEHOLDER"
+  # In production: injected via --set or sealed-secrets
+
 grafana:
   dashboards:
     default:

@@ -9,7 +9,7 @@
 [![Lint & Test](https://github.com/sabermaraghi/bash-mastery-devops/actions/workflows/lint.yaml/badge.svg)](https://github.com/sabermaraghi/bash-mastery-devops/actions/workflows/lint.yaml)
 [![Release](https://img.shields.io/github/v/release/sabermaraghi/bash-mastery-devops?label=latest%20release)](https://github.com/sabermaraghi/bash-mastery-devops/releases)
 
-> **This repo is more secure than 99.9% of open-source projects worldwide**  
+> **This repo is more secure than 90% of open-source projects worldwide**  
 > Every secret, vulnerability, or GPL license → **automatically blocked**  
 > Every PR → **full scan with Trivy + Gitleaks + Semgrep + SBOM + SARIF**
 
@@ -56,3 +56,40 @@ bash-mastery-devops/
 | 19–21 | Chaos Engineering, Self-Healing, Cost Optimization | Principal | 
 
 
+> 21+ of practical learning with **Bash, FastAPI, Kubernetes, ArgoCD, SOPS, Cosign, Trivy**
+
+---
+
+## Day 8: Microservices with FastAPI + Bash + Helm + ArgoCD
+
+### Features
+- **5 Complete Micreservice**: `backup`, `deploy`, `health`, `secret`, `cost`
+- **FastAPI REST API** با OpenAPI
+- **Bash Orchestrator** با `set -euo pipefail`
+- **Helm Charts** با `values-prod.yaml`, `values-dev.yaml`
+- **ArgoCD GitOps** با `App of Apps`
+- **SOPS + sealed-secrets** برای secret management
+- **Trivy + Cosign + SBOM** #To Containers Security
+**Zero secrets in code** — Push Protection فعال
+
+### Architecture
+```mermaid
+graph TD
+    A[ArgoCD] --> B[Helm Charts]
+    B --> C[FastAPI + Bash]
+    C --> D[Kubernetes]
+
+
+
+## Secret Management (Production-Grade)
+
+- **No secrets in code** — Active Push Protection
+- **SOPS + GitHub Actions**
+- **Secret in runtime**
+
+  env:
+    - name: SLACK_WEBHOOK
+      valueFrom:
+        secretKeyRef:
+          name: alertmanager-secrets
+          key: webhook_url

@@ -13,3 +13,5 @@ Thumbs.db
 
 # Bash specifics
 *.bak
+monitoring/alertmanager/config.yaml
+monitoring/alertmanager/config.yaml

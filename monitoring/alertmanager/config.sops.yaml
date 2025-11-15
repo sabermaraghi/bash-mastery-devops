@@ -1,0 +1,14 @@
+# This file is encrypted with SOPS + GitHub Actions
+# Decrypted at runtime using: sops -d config.sops.yaml
+webhook_url: ENC[AES256_GCM,data:xxxxxx,iv:xxxxxx,type:str]
+sops:
+  kms: []
+  gcp_kms: []
+  azure_kv: []
+  hc_vault: []
+  age: []
+  lastmodified: "2025-11-15T06:00:00Z"
+  mac: ENC[AES256_GCM,data:xxxxxx,iv:xxxxxx,type:str]
+  pgp: []
+  encrypted_regex: ^(webhook_url)$
+  version: 3.8.1

@@ -33,4 +33,12 @@ cd ~/devops-bash/bash-mastery-devops
 
 mkdir -p argocd/{applications,base/overlays/{prod,staging,dev},bootstrap,projects,secrets}
 
+# 1. Install ArgoCD
+kubectl create ns argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
+# 2. Apply App of Apps
+kubectl apply -f argocd/applications/
+
+# 3. Access APIs
+curl http://backup-api.local/health
