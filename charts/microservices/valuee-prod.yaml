@@ -1,0 +1,54 @@
+# charts/microservices/values-prod.yaml
+global:
+  environment: production
+  namespace: microservices-prod
+
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+
+hpa:
+  minReplicas: 2
+  maxReplicas: 20
+
+backup-api:
+  replicaCount: 3
+  resources:
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+
+deploy-api:
+  replicaCount: 2
+
+health-api:
+  replicaCount: 5
+
+secret-api:
+  replicaCount: 2
+  env:
+    SECRET_API_TOKEN: "((vault:secret/data/prod/api#token))"
+
+cost-api:
+  enabled: true
+  replicaCount: 2
+  budget:
+    monthly: 15000
+    alertWebhook: "https://hooks.slack.com/services/prod/..."
+
+monitoring:
+  enabled: true
+  prometheus:
+    enabled: true
+    retention: 30d
+    storage:
+      size: 50Gi
+  grafana:
+    enabled: true
+    persistence:
+      enabled: true
+      size: 20Gi
+    adminPassword: "((vault:secret/data/grafana#admin-pass))"

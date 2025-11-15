@@ -1,0 +1,19 @@
+# argocd/bootstrap/argocd-cm.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+data:
+  repositories: |
+    - url: https://github.com/sabermaraghi/bash-mastery-devops.git
+      type: git
+  url: https://argocd.yourcompany.de
+  application.instanceLabelKey: app.kubernetes.io/instance
+  resource.exclusions: |
+    - apiGroups:
+        - cilium.io
+      kinds:
+        - CiliumNetworkPolicy
+      clusters:
+        - "*"

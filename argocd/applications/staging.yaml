@@ -1,0 +1,21 @@
+# argocd/applications/staging.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: microservices-staging
+  namespace: argocd
+spec:
+  project: microservices
+  source:
+    repoURL: https://github.com/yourusername/bash-mastery-devops.git
+    targetRevision: main
+    path: argocd/overlays/staging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: microservices-staging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

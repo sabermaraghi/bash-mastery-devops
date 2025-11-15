@@ -1,0 +1,6 @@
+grafana:
+  dashboards:
+    default:
+      finops-cost:
+        json: |
+          <inline the entire JSON above or mount via ConfigMap>

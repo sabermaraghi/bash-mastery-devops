@@ -1,0 +1,39 @@
+# argocd/projects/microservices-project.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: microservices
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Microservices Platform - Zero Trust
+  sourceRepos:
+    - https://github.com/sabermaraghi/bash-mastery-devops.git
+  destinations:
+    - namespace: microservices-*
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: apps
+      kind: Deployment
+    - group: networking.k8s.io
+      kind: Ingress
+  namespaceResourceWhitelist:
+    - group: ''
+      kind: Service
+    - group: ''
+      kind: ConfigMap
+  orphanedResources:
+    warn: true
+  syncWindows:
+    - kind: allow
+      schedule: "0 22 * * 1-5"
+      duration: 8h
+      applications:
+        - microservices-*
+      namespaces:
+        - microservices-*
+      manualSync: true
+

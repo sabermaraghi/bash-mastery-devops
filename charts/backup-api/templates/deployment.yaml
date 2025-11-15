@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "backup-api.fullname" . }}
+  labels:
+    {{- include "backup-api.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "backup-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "backup-api.selectorLabels" . | nindent 8 }}
+    spec:
+      securityContext:
+        {{- include "microservices.securityContext" . | nindent 8 }}
+      containers:
+        - name: backup-api
+          image: "{{ .Values.global.imageRegistry }}/backup-api:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: backups
+              mountPath: /backups
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: backups
+          persistentVolumeClaim:
+            claimName: backup-pvc

@@ -156,3 +156,115 @@ charts/
 ├── secret-api/              ← Subchart 4
 ├── cost-api/                ← Subchart 5
 └── monitoring/              ← Subchart 6 (Prometheus + Grafana)
+
+
+## Installation and use
+
+helm create microservices
+
+# → 5 deployment, 5 service, ingress, secrets, configmaps
+
+argocd/
+├── applications/                 # App of Apps
+│   ├── prod.yaml
+│   ├── staging.yaml
+│   └── dev.yaml
+├── base/                         # Base configs (مشترک)
+│   ├── kustomization.yaml
+│   └── namespace.yaml
+├── overlays/                     # محیط‌های مختلف
+│   ├── prod/
+│   │   ├── kustomization.yaml
+│   │   └── values-prod.yaml
+│   ├── staging/
+│   └── dev/
+└── bootstrap/                    # Bootstrap ArgoCD
+    └── install.yaml
+
+
+# 1. Helm Test
+helm template charts/microservices --values charts/microservices/values-prod.yaml > manifest.yaml
+
+# 2. Install using Helm
+
+helm upgrade --install microservices-prod charts/microservices \
+  --values charts/microservices/values-prod.yaml \
+  --namespace microservices-prod --create-namespace
+
+# 3. ArgoCD sync
+argocd app sync microservices-prod
+
+
+
+# 1. Installing Argo CD
+kubectl create namespace argocd
+kubectl apply -n argocd -f argocd/bootstrap/install.yaml
+
+# 2. Waiting to readiness
+
+kubectl wait --for=condition=Ready pod -l app.kubernetes.io/name=argocd-server -n argocd --timeout=300s
+
+# 3. Registering Applications
+
+kubectl apply -f argocd/applications/prod.yaml
+kubectl apply -f argocd/applications/staging.yaml
+
+# 4. ckecking status
+
+argocd app list
+argocd app get microservices-prod
+
+
+## Velero Backup
+
+backup/
+└── velero/
+    ├── install.yaml
+    ├── schedule-nightly.yaml
+    ├── backup-prod.yaml
+    └── restore-prod.yaml
+
+# Set Up
+
+kubectl apply -f backup/velero/install.yaml
+
+# Backup check
+
+velero backup get
+velero schedule get
+
+# Recoveri Test
+
+velero restore create --from-backup nightly-backup-20251111
+
+
+## Policies 
+
+conftest test policies/conftest/test/policy_test.rego -p policies/gatekeeper/
+
+# Install Gatekeeper (OPA admission controller)
+kubectl apply -f policies/gatekeeper/install.yaml
+
+# Apply all security and compliance policies
+kubectl apply -f policies/gatekeeper/constraints/
+
+# Test: This pod will be REJECTED (runs as root = forbidden)
+kubectl run test-pod --image=nginx --restart=Never --overrides='
+{
+  "apiVersion": "v1",
+  "spec": {
+    "containers": [
+      {
+        "name": "nginx",
+        "image": "nginx",
+        "securityContext": {
+          "runAsUser": 0
+        }
+      }
+    ]
+  }
+}'
+# Expected output: Error from server (Forbidden): admission webhook "validation.gatekeeper.sh" denied the request
+
+
+

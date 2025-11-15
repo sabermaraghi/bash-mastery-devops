@@ -1,0 +1,30 @@
+# argocd/projects/default.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: default
+  namespace: argocd
+spec:
+  description: Default project for all applications
+  sourceRepos:
+    - '*'
+  destinations:
+    - namespace: '*'
+      server: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  orphanedResources:
+    warn: false
+  roles:
+    - name: admin
+      description: Full access
+      policies:
+        - p, proj:default:admin, applications, *, */*, allow
+    - name: readonly
+      description: Read-only access
+      policies:
+        - p, proj:default:readonly, applications, get, */*, allow

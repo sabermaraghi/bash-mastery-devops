@@ -1,0 +1,33 @@
+# charts/microservices/Chart.yaml
+apiVersion: v2
+name: microservices
+description: Zero-Trust Microservices Platform - FAANG/BSI C5 Ready
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+dependencies:
+  - name: backup-api
+    version: 1.0.0
+    repository: "file://../backup-api"
+    condition: backup-api.enabled
+  - name: deploy-api
+    version: 1.0.0
+    repository: "file://../deploy-api"
+    condition: deploy-api.enabled
+  - name: health-api
+    version: 1.0.0
+    repository: "file://../health-api"
+    condition: health-api.enabled
+  - name: secret-api
+    version: 1.0.0
+    repository: "file://../secret-api"
+    condition: secret-api.enabled
+  - name: cost-api
+    version: 1.0.0
+    repository: "file://../cost-api"
+    condition: cost-api.enabled
+  - name: monitoring
+    version: 1.0.0
+    repository: "file://../monitoring"
+    condition: monitoring.enabled

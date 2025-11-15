@@ -1,0 +1,21 @@
+# backup/velero/schedule-nightly.yaml
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: nightly-backup
+  namespace: velero
+spec:
+  schedule: "0 2 * * *"  # هر شب ۲ صبح
+  template:
+    includedNamespaces:
+      - microservices-prod
+    storageLocation: default
+    defaultVolumesToFsBackup: true
+    ttl: 720h  # ۳۰ روز نگه‌داری
+    hooks:
+      pre:
+        exec:
+          container: backup-api
+          command: ["/app/scripts/pre-backup.sh"]
+          onError: Continue
+          timeout: 5m

@@ -1,0 +1,51 @@
+# argocd/overlays/staging/values-staging.yaml
+global:
+  imageRegistry: ghcr.io/sabermaraghi
+  imagePullSecrets:
+    - name: ghcr-pull-secret
+  environment: staging
+  namespace: microservices-staging
+
+backup-api:
+  enabled: true
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+
+deploy-api:
+  enabled: true
+  replicaCount: 1
+
+health-api:
+  enabled: true
+  replicaCount: 2
+
+secret-api:
+  enabled: true
+  env:
+    SECRET_API_TOKEN: "((vault:secret/data/staging/api#token))"
+
+cost-api:
+  enabled: true
+  budget:
+    monthly: 2000
+    alertWebhook: "https://hooks.slack.com/services/staging/..."
+
+monitoring:
+  enabled: true
+  prometheus:
+    enabled: true
+    retention: 7d
+    storage:
+      size: 10Gi
+  grafana:
+    enabled: true
+    persistence:
+      enabled: true
+      size: 5Gi
+    adminPassword: "((vault:secret/data/grafana#staging-pass))"

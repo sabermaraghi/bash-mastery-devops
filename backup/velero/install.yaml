@@ -1,0 +1,50 @@
+# backup/velero/install.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: velero
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: velero
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://vmware-tanzu.github.io/helm-charts
+    chart: velero
+    targetRevision: 7.2.0
+    helm:
+      values: |
+        configuration:
+          provider: aws
+          backupStorageLocation:
+            bucket: microservices-backup-prod
+            config:
+              region: eu-central-1
+              s3ForcePathStyle: false
+          volumeSnapshotLocation:
+            config:
+              region: eu-central-1
+          defaultVolumesToFsBackup: true
+        credentials:
+          useSecret: true
+          secretContents:
+            cloud: |
+              [default]
+              aws_access_key_id = ((aws-backup-key))
+              aws_secret_access_key = ((aws-backup-secret))
+        initContainers:
+          - name: velero-plugin-for-aws
+            image: velero/velero-plugin-for-aws:v1.10.0
+            volumeMounts:
+              - mountPath: /target
+                name: plugins
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: velero
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

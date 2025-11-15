@@ -1,0 +1,35 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "microservices.fullname" . }}-ingress
+  namespace: {{ .Values.global.namespace }}
+  annotations:
+    {{- toYaml .Values.ingress.annotations | nindent 4 }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  tls:
+    - hosts:
+        - {{ .Values.global.domain }}
+      secretName: {{ include "microservices.fullname" . }}-tls
+  rules:
+    - host: {{ .Values.global.domain }}
+      http:
+        paths:
+          {{- range $path, $service := dict 
+              "/backup" "backup-api" 
+              "/deploy" "deploy-api" 
+              "/health" "health-api" 
+              "/secret" "secret-api" 
+              "/cost" "cost-api" }}
+          {{- if (index $.Values $service).enabled }}
+          - path: {{ $path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "microservices.fullname" $ }}-{{ $service }}
+                port:
+                  number: 8000
+          {{- end }}
+          {{- end }}
+{{- end }}

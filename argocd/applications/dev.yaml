@@ -1,0 +1,21 @@
+# argocd/applications/dev.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: microservices-dev
+  namespace: argocd
+spec:
+  project: microservices
+  source:
+    repoURL: https://github.com/sabermaraghi/bash-mastery-devops.git
+    targetRevision: main
+    path: argocd/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: microservices-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

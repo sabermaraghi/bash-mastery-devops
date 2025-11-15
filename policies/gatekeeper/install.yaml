@@ -1,0 +1,33 @@
+# policies/gatekeeper/install.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gatekeeper-system
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gatekeeper
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://open-policy-agent.github.io/gatekeeper/charts
+    chart: gatekeeper
+    targetRevision: 3.16.0
+    helm:
+      values: |
+        audit:
+          replicaCount: 1
+          logLevel: INFO
+        enablingDefaultConstraints: false
+        postInstall:
+          labelNamespace:
+            enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gatekeeper-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

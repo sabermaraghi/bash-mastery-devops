@@ -1,0 +1,38 @@
+{{- if .Values.backup-api.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "microservices.fullname" . }}-backup-api
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "microservices.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backup-api
+spec:
+  replicas: {{ .Values.backup-api.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "microservices.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: backup-api
+  template:
+    metadata:
+      labels:
+        {{- include "microservices.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: backup-api
+    spec:
+      serviceAccountName: backup-api-sa
+      containers:
+        - name: backup-api
+          image: "{{ .Values.global.imageRegistry }}/backup-api:{{ .Values.backup-api.image.tag }}"
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            {{- toYaml .Values.backup-api.volumeMounts | nindent 12 }}
+          resources:
+            {{- toYaml .Values.backup-api.resources | nindent 12 }}
+          env:
+            {{- toYaml .Values.backup-api.env | nindent 12 }}
+      volumes:
+        - name: backups
+          persistentVolumeClaim:
+            claimName: backup-pvc
+{{- end }}

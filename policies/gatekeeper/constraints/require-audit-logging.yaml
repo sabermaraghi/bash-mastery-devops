@@ -1,0 +1,13 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredVolume
+metadata:
+  name: require-audit-log
+spec:
+  match:
+    kinds:
+      - apiGroups: ["apps"]
+        kinds: ["Deployment"]
+    namespaces: ["microservices-prod"]
+  parameters:
+    volumeName: "audit-log"
+    mountPath: "/var/log"

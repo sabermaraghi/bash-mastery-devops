@@ -1,0 +1,48 @@
+global:
+  imageRegistry: ghcr.io/yourusername
+  imagePullSecrets:
+    - name: ghcr-pull-secret
+  environment: production
+  namespace: microservices-prod
+
+backup-api:
+  enabled: true
+  replicaCount: 3
+  resources:
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+
+deploy-api:
+  enabled: true
+  replicaCount: 2
+
+health-api:
+  enabled: true
+  replicaCount: 5
+
+secret-api:
+  enabled: true
+  env:
+    SECRET_API_TOKEN: "((vault:secret/data/prod/api#token))"
+
+cost-api:
+  enabled: true
+  budget:
+    monthly: 15000
+    alertWebhook: "https://hooks.slack.com/services/..."
+
+monitoring:
+  enabled: true
+  prometheus:
+    retention: 30d
+    storage:
+      size: 50Gi
+  grafana:
+    persistence:
+      enabled: true
+      size: 20Gi
+    adminPassword: "((vault:secret/data/grafana#admin-pass))"

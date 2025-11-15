@@ -1,0 +1,123 @@
+# charts/microservices/values.yaml
+global:
+  imageRegistry: ghcr.io/yourusername
+  imagePullSecrets: []
+  environment: development
+  namespace: microservices-dev
+  domain: microservices.yourcompany.de
+  labels:
+    compliance: gdpr-nis2-dora
+    owner: sre-team
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+
+networkPolicy:
+  enabled: true
+  allowFromIngress: true
+  allowFromMonitoring: true
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+pvc:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
+# services
+backup-api:
+  enabled: true
+  replicaCount: 1
+  image:
+    tag: v1.0.0
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+  volumeMounts:
+    - name: backups
+      mountPath: /backups
+  env: {}
+
+deploy-api:
+  enabled: true
+  replicaCount: 1
+  image:
+    tag: v1.0.0
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+
+health-api:
+  enabled: true
+  replicaCount: 1
+  image:
+    tag: v1.0.0
+  resources:
+    limits:
+      cpu: "300m"
+      memory: "256Mi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+
+secret-api:
+  enabled: true
+  replicaCount: 1
+  image:
+    tag: v1.0.0
+  resources:
+    limits:
+      cpu: "400m"
+      memory: "512Mi"
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+  env:
+    SECRET_API_TOKEN: "dev-token-123"
+
+cost-api:
+  enabled: false
+  replicaCount: 1
+  image:
+    tag: v1.0.0
+  resources:
+    limits:
+      cpu: "600m"
+      memory: "1Gi"
+    requests:
+      cpu: "300m"
+      memory: "512Mi"
+  budget:
+    monthly: 1000
+    alertWebhook: "https://hooks.slack.com/services/..."
+
+monitoring:
+  enabled: true
+  prometheus:
+    enabled: false
+    retention: 7d
+  grafana:
+    enabled: true
+    persistence:
+      enabled: false
+      size: 5Gi
+    adminPassword: "dev-pass-123"

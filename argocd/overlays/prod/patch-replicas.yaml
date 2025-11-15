@@ -1,0 +1,14 @@
+# argocd/overlays/prod/patch-replicas.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backup-api
+spec:
+  replicas: 5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-api
+spec:
+  replicas: 7

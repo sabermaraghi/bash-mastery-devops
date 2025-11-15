@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argocd
+  labels:
+    app.kubernetes.io/part-of: argocd
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ArgoCD
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  server:
+    route:
+      enabled: true
+      hostname: argocd.yourcompany.de
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+  rbac:
+    policy: |
+      g, sre-team, role:admin
+      g, dev-team, role:readonly
+  repos:
+    - https://github.com/yourusername/bash-mastery-devops.git
+  dex:
+    openShiftOAuth: true
+  applicationInstanceLabelKey: app.kubernetes.io/instance
+

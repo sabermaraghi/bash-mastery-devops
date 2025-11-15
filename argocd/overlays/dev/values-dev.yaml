@@ -1,0 +1,43 @@
+# argocd/overlays/dev/values-dev.yaml
+global:
+  imageRegistry: ghcr.io/yourusername
+  imagePullSecrets: []
+  environment: development
+  namespace: microservices-dev
+
+backup-api:
+  enabled: true
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: "300m"
+      memory: "256Mi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+
+deploy-api:
+  enabled: true
+  replicaCount: 1
+
+health-api:
+  enabled: true
+  replicaCount: 1
+
+secret-api:
+  enabled: true
+  env:
+    SECRET_API_TOKEN: "dev-token-123"
+
+cost-api:
+  enabled: false  # در dev خاموش
+
+monitoring:
+  enabled: true
+  prometheus:
+    enabled: false
+  grafana:
+    enabled: true
+    persistence:
+      enabled: false
+    adminPassword: "dev-pass-123"
