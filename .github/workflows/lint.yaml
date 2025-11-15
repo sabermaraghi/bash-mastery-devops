@@ -36,3 +36,8 @@ jobs:
       
       - name: Run arguments.sh with inputs
         run: bash scripts/basics/arguments.sh ${{ inputs.first_arg }} ${{ inputs.second_arg }}
+      
+      - name: Run ShellCheck
+        run: shellcheck scripts/advanced/day8/*.sh
+
+

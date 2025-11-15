@@ -14,4 +14,7 @@ Thumbs.db
 # Bash specifics
 *.bak
 monitoring/alertmanager/config.yaml
+<<<<<<< HEAD
 monitoring/alertmanager/config.yaml
+=======
+>>>>>>> feature/day8-full-microservices
