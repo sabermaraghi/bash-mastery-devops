@@ -1,0 +1,7 @@
+# Well-sized: utilization sits in the healthy band → OK
+name        = cache
+replicas    = 2
+cpu_request = 200
+mem_request = 512
+cpu_usage   = 120
+mem_usage   = 300

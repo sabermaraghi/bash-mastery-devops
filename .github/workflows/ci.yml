@@ -1,0 +1,31 @@
+name: CI
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          sudo curl -fsSL https://github.com/mvdan/sh/releases/download/v3.8.0/shfmt_v3.8.0_linux_amd64 -o /usr/local/bin/shfmt
+          sudo chmod +x /usr/local/bin/shfmt
+          sudo npm install -g bats
+
+      # shfmt is a *formatter*: enforce it as an auto-fixer in pre-commit, and
+      # only report drift in CI so a pure-whitespace nit never blocks a build.
+      - name: shfmt (report only)
+        continue-on-error: true
+        run: shfmt -d -i 2 -ci $(find days lib -name '*.sh')
+
+      # shellcheck (real bugs), tests -> hard gates.
+      - name: shellcheck
+        run: shellcheck -x --severity=error $(find days lib -name '*.sh')
+
+      - name: bats
+        run: bats -r days

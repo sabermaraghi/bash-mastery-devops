@@ -1,0 +1,14 @@
+# gitleaks config — allowlist the example template so placeholders don't trip CI.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Ignore documentation placeholders"
+paths = [
+  '''\.env\.example$''',
+  '''docs/.*\.md$''',
+]
+regexes = [
+  '''sk-replace-me''',
+  '''replace-me''',
+]

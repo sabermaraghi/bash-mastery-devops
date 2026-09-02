@@ -1,0 +1,30 @@
+# Real Kubernetes manifest for the "api" app (see frontend for the full notes).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  labels:
+    app.kubernetes.io/name: api
+    app.kubernetes.io/managed-by: day27-argocd
+spec:
+  replicas: 2          # <-- change me, commit, push, watch ArgoCD reconcile
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: httpd:2.4       # a real, pullable image (Apache httpd)
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi

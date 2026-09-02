@@ -1,0 +1,47 @@
+# Active from Day 1. Run per day on only that day's changed files:
+#   pre-commit run --files days/dayNN/scripts/*.sh days/dayNN/tests/*.bats
+# The repo-wide `pre-commit run --all-files` is reserved for the final pass
+# once all days are complete.
+repos:
+  # --- hygiene tier: applies to every day's shell scripts ---
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      - id: detect-private-key
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.8.0-1
+    hooks:
+      - id: shfmt
+        args: [-w, -i, "2", -ci]
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        args: [-x, --severity=error]
+  # --- security tier: harmless early, essential from Day 17+ ---
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+  - repo: local
+    hooks:
+      - id: trivy-fs
+        name: trivy filesystem scan
+        entry: >-
+          bash -c 'command -v trivy >/dev/null ||
+          { echo "SKIP - trivy not installed"; exit 0; };
+          trivy fs --quiet --exit-code 1 --no-progress --severity HIGH,CRITICAL .'
+        language: system
+        pass_filenames: false
+      - id: bats
+        name: run BATS suites
+        entry: >-
+          bash -c 'command -v bats >/dev/null ||
+          { echo "SKIP - bats not installed"; exit 0; };
+          bats -r days projects'
+        language: system
+        pass_filenames: false
