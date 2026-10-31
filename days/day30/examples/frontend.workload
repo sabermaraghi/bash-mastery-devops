@@ -1,0 +1,7 @@
+# Over-provisioned: reserves 500m CPU but uses ~100m → WASTE
+name        = frontend
+replicas    = 5
+cpu_request = 500
+mem_request = 512
+cpu_usage   = 100
+mem_usage   = 200

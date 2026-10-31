@@ -1,144 +1,151 @@
-# bash-mastery-devops
+<div align="center">
 
-**Senior → Staff → Principal Level | 21-Day Zero-Trust Bash Mastery | FAANG-Approved**
+# 🐚 bash-mastery-devops
 
-[![Security: Passing](https://img.shields.io/badge/security-passing-brightgreen?style=flat-square&logo=shield)](https://github.com/sabermaraghi/bash-mastery-devops/security/code-scanning)
-[![SBOM: Generated](https://img.shields.io/badge/SBOM-generated-blue?style=flat-square&logo=dependabot)](https://github.com/sabermaraghi/bash-mastery-devops/security/code-scanning)
+### From core Bash to Principal-level DevOps automation — in 30 focused days
+
 [![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
-[![Contributors](https://img.shields.io/github/contributors/sabermaraghi/bash-mastery-devops.svg?style=flat-square)](https://github.com/sabermaraghi/bash-mastery-devops/graphs/contributors)
-[![Stars](https://img.shields.io/github/stars/sabermaraghi/bash-mastery-devops.svg?style=social)](https://github.com/sabermaraghi/bash-mastery-devops/stargazers)
-[![Lint & Test](https://github.com/sabermaraghi/bash-mastery-devops/actions/workflows/lint.yaml/badge.svg)](https://github.com/sabermaraghi/bash-mastery-devops/actions/workflows/lint.yaml)
-[![Release](https://img.shields.io/github/v/release/sabermaraghi/bash-mastery-devops?label=latest%20release)](https://github.com/sabermaraghi/bash-mastery-devops/releases)
+![Days](https://img.shields.io/badge/curriculum-30%20days-blue?style=flat-square)
+![Structure](https://img.shields.io/badge/every%20day-lesson%20%2B%20scripts%20%2B%20tests-orange?style=flat-square)
+![Gates](https://img.shields.io/badge/quality-pre--commit%20%2B%20BATS%20%2B%20CI-brightgreen?style=flat-square)
 
-> **This repo is more secure than 90% of open-source projects worldwide**  
-> Every secret, vulnerability, or GPL license → **automatically blocked**  
-> Every PR → **full scan with Trivy + Gitleaks + Semgrep + SBOM + SARIF**
-
-A **21-day professional learning path** to go from **Bash beginner to Principal DevOps Engineer** using real-world, production-grade scripts.
-
-Built by two Senior DevOps engineers in Germany — **100% Zero-Trust, SOC2-compliant, CISO-approved**.
+</div>
 
 ---
 
-## Get Started in 5 Minutes (Even Juniors Can Do It!)
+Every day is **one focused lesson** with runnable scripts and a BATS test suite —
+no filler, equal weight, identical structure. Shared logic lives once in `/lib`,
+and pre-commit + BATS gate the repo from **Day 1**.
 
-| # | Step | Windows (Git Bash) | Linux/macOS | Result |
-|---|------|---------------------|-------------|--------|
-| 1 | **Install prerequisites** | ```bash<br>winget install Python.Python.3.11<br>pip install pre-commit<br>``` | ```bash<br>sudo apt update && sudo apt install python3-pip -y<br>pip3 install --user pre-commit<br>``` | pre-commit ready |
-| 2 | **Clone & setup** | ```bash<br>git clone https://github.com/sabermaraghi/bash-mastery-devops.git<br>cd bash-mastery-devops<br>pre-commit install<br>``` | Same | Security hooks activated |
-| 3 | **Test secret detection (must FAIL!)** | ```bash<br>echo 'ghp_1234567890abcdef1234567890abcdef1234' > leak.sh<br>git add leak.sh && git commit -m "test"<br>``` | Same | `[FAILED] Gitleaks: GitHub PAT detected` |
-| 4 | **Fix & commit** | Delete `leak.sh` → commit again | Same | Green checkmark |
-| 5 | **View security scans** | [Security → Code scanning](https://github.com/sabermaraghi/bash-mastery-devops/security/code-scanning) | Same | All findings in SARIF |
-| 6 | **Contribute!** | Any change → 12 pre-commit hooks run automatically | Same | Only clean code gets merged |
+## 🚀 Get started in 2 minutes
 
-## Repository Structure
 ```bash
+git clone <this repo> && cd bash-mastery-devops
+pip install --user pre-commit && pre-commit install
+
+bash days/day01/scripts/variables.sh   # run a lesson
+bats days/day01/tests                  # test a lesson
+bats -r days                           # test everything
+```
+
+> **`.env` is only needed for the Day 10 lesson** (safe config loading). No other
+> day — and no test/CI run — requires it. When you get to Day 10, run
+> `cp .env.example .env` and fill in your values (`.env` is gitignored; never
+> commit real secrets).
+
+## 🗺️ The 30-day path
+
+Six phases, five days each.
+
+| Phase | Days | Theme |
+|:---:|:---:|:---|
+| 1 | 01–05 | 🧱 **Bash Foundations** |
+| 2 | 06–10 | 📦 **Data, Files & Text** |
+| 3 | 11–15 | 🛡️ **Robust & Concurrent Scripting** |
+| 4 | 16–20 | ✅ **Quality, Security & Performance** |
+| 5 | 21–25 | ⚙️ **DevOps Automation** |
+| 6 | 26–30 | 🏛️ **Platform Engineering (Principal)** |
+
+## 📚 Daily lessons
+
+Each day links straight to its lesson. Open any day to get the walkthrough,
+runnable scripts, and its test suite.
+
+### 🧱 Phase 1 — Bash Foundations
+| Day | Topic | Lesson |
+|:---:|:---|:---:|
+| 01 | Shell basics & variables — shebang, strict mode, `readonly`, `export` | [open »](days/day01/README.md) |
+| 02 | Conditionals & test expressions — `if/elif`, `[[ ]]`, regex validation | [open »](days/day02/README.md) |
+| 03 | Loops — `for` / `while` / `until` and the safe `read` pattern | [open »](days/day03/README.md) |
+| 04 | Functions & scope — `local`, echo-return, defaults, array returns | [open »](days/day04/README.md) |
+| 05 | Arguments & getopts — positionals, `$@`, named flags with validation | [open »](days/day05/README.md) |
+
+### 📦 Phase 2 — Data, Files & Text
+| Day | Topic | Lesson |
+|:---:|:---|:---:|
+| 06 | File I/O & redirection — `>`/`>>`/`2>`/`&>`, here-docs, safe reads | [open »](days/day06/README.md) |
+| 07 | Text processing — `grep` / `sed` / `awk` + the `cut\|sort\|uniq` combo | [open »](days/day07/README.md) |
+| 08 | Arrays & associative arrays — indexed maps, keys, `mapfile` | [open »](days/day08/README.md) |
+| 09 | JSON & API integration — `jq` read/filter/build, `curl` patterns | [open »](days/day09/README.md) |
+| 10 | Environment variables & config — safe `.env` loading, validation, masking | [open »](days/day10/README.md) |
+
+### 🛡️ Phase 3 — Robust & Concurrent Scripting
+| Day | Topic | Lesson |
+|:---:|:---|:---:|
+| 11 | Error handling, logging & debugging — traps, shared logger, `bash -x` | [open »](days/day11/README.md) |
+| 12 | Process management & signals — background jobs, PIDs, `wait`, traps | [open »](days/day12/README.md) |
+| 13 | Parallel & concurrent execution — bounded worker pools, `wait -n` | [open »](days/day13/README.md) |
+| 14 | Modular libraries — one shared `/lib`, sourcing, dual-use guard | [open »](days/day14/README.md) |
+| 15 | Unit testing with BATS — `run`, lifecycle, failure paths | [open »](days/day15/README.md) |
+
+### ✅ Phase 4 — Quality, Security & Performance
+| Day | Topic | Lesson |
+|:---:|:---|:---:|
+| 16 | Pre-commit hooks & linting — the quality gate, per-day runs | [open »](days/day16/README.md) |
+| 17 | Security fundamentals — secret scanning, permission hardening, safe patterns | [open »](days/day17/README.md) |
+| 18 | Zero-trust security pipeline — artifact verification, signed stages, deploy guard | [open »](days/day18/README.md) |
+| 19 | Performance optimization — benchmarking, profiling, hot-path tuning | [open »](days/day19/README.md) |
+| 20 | Unix tooling at scale — field extraction, histograms, streaming pipelines | [open »](days/day20/README.md) |
+
+### ⚙️ Phase 5 — DevOps Automation
+| Day | Topic | Lesson |
+|:---:|:---|:---:|
+| 21 | Capstone I — Distributed Log Analyzer Pro — parse, aggregate & report web logs | [open »](days/day21/README.md) |
+| 22 | Rootless containers — Buildah/Podman/Cosign, rootless runs, image audit | [open »](days/day22/README.md) |
+| 23 | Modular CI/CD framework — staged pipelines, fail-fast, timing | [open »](days/day23/README.md) |
+| 24 | Git-driven auto-deploy (GitOps) — reconcile, drift detection, prune | [open »](days/day24/README.md) |
+| 25 | Kubernetes automation with kubectl — safe apply, context guard, protected contexts | [open »](days/day25/README.md) |
+
+### 🏛️ Phase 6 — Platform Engineering (Principal)
+| Day | Topic | Lesson |
+|:---:|:---|:---:|
+| 26 | Kubernetes Operators & CRDs — reconcile loop, status subresource, self-heal | [open »](days/day26/README.md) |
+| 27 | ArgoCD App-of-Apps — leaf & root apps, honest sync status, drift gate | [open »](days/day27/README.md) |
+| 28 | Chaos Engineering — steady-state checks, blast radius, reproducible experiments | [open »](days/day28/README.md) |
+| 29 | Self-Healing systems — liveness probes, restart policy, CrashLoopBackOff | [open »](days/day29/README.md) |
+| 30 | Cost & FinOps — spend report, waste/risk detection, right-sizing gate | [open »](days/day30/README.md) |
+
+> Full curriculum index: **[docs/curriculum.md](docs/curriculum.md)**
+
+## 🏗️ Capstone project — devops-platform
+
+The graduation project ties the platform days together into one real,
+end-to-end system: a **GitOps-managed, self-healing, cost-observable** platform
+on Kubernetes — operated entirely with the scripts you built. Every one of
+Days 22–30 maps to a real command (`up` · `deploy` · `operate` · `chaos` ·
+`heal` · `cost`), and an offline `validate` keeps it CI-green with no cluster.
+
+```bash
+bash projects/devops-platform/capstone.sh validate            # offline sanity check
+bash projects/devops-platform/capstone.sh up --context kind-bash-mastery
+```
+
+> Full guide: **[projects/devops-platform/README.md](projects/devops-platform/README.md)**
+
+## 🗂️ Repository layout
+
+```
 bash-mastery-devops/
-├── scripts/          → 200+ production scripts (modular, tested)
-├── docs/             → Daily lessons (Day 1–21)
-├── projects/         → Full automation projects (K8s, ArgoCD, Terraform)
-├── ci-cd/            → GitHub Actions (lint, test, security, release)
-├── k8s/              → Manifests + operators
-├── argocd-apps/      → App of Apps + GitOps
-├── .github/
-│   └── workflows/    → Zero-Trust CI/CD + SARIF upload
-├── .pre-commit-config.yaml → 12 security hooks
-└── setup.sh / setup.ps1 → One-click install
-```
-## Day-by-Day Progress (21 Days to Principal)
-
-| Day | Topic | Level | Status |
-|-----|------|-------|--------|
-| 1–5 | Core Bash, Arrays, JSON, Parallel |
-| 6–7 | Modular Libraries, BATS Testing, Zero-Trust Security |
-| 8–12 | Docker, Buildah, Cosign, SLSA, Distroless | Staff |
-| 13–18 | Kubernetes Operators, ArgoCD, GitOps | Principal |
-| 19–21 | Chaos Engineering, Self-Healing, Cost Optimization | Principal |
-
-> 21+ of practical learning with **Bash, FastAPI, Kubernetes, ArgoCD, SOPS, Cosign, Trivy**
-
----
-
-## Daily Docs
-
-|Day|Topic|Doc|
-|---|---------|--------|
-| 01 | Intro to Bash - variables, conditionals, and args with examples | [Doc 1](./docs/day1.md) |
-| 02 | Loops, Functions, and Arguments in Bash | [Doc 2](./docs/day2.md) |
-| 03 | File I/O, Redirection, Pipes, find, grep, sed, awk | [Doc 3](./docs/day3.md) |
-| 04 | Error Handling, Debugging, Traps, Signals, Logging | [Doc 4](./docs/day4.md) |
-| 05 | Arrays, Associative Arrays, JSON Processing, Parallel Execution & Real-World API Integration | [Doc 5](./docs/day5.md) |
-| 06 | Modular Bash Libraries, Unit Testing with BATS, Code Coverage, Pre-commit Hooks | [Doc 6](./docs/day6.md) |
-| 07 | Zero-Trust Security Pipeline | [Doc 7](./docs/day7.md) |
-| 08 | Process Management & Signals | [Doc 8](./docs/day8.md) |
-| 09 | Environment Variables & Sourcing in Bash | [Doc 9](./docs/day9.md) |
-| 10 | Modular Scripting & Reusable Libraries | [Doc 10](./docs/day10.md) |
-| 11 | Security Best Practices in Bash Scripting | [Doc 11](./docs/day11.md) |
-| 12 | Performance Optimization in Bash | [Doc 12](./docs/day12.md) |
-| 13 | Mastering Unix Tools Integration | [Doc 13](./docs/day13.md) |
-| 14 | Mid-Project — Distributed Log Analyzer Pro | [Doc 14](./docs/day14.md) |
-| 15 | Git-Driven Auto-Deploy (The Senior Way) | [Doc 15](./docs/day15.md) |
-| 16 | Rootless Container Scripting with Buildah & Podman | [Doc 16](./docs/day16.md) |
-| 17 | Production-Grade Modular CI/CD Framework | [Doc 17](./docs/day17.md) |
-
-
-## Day 8: Microservices with FastAPI + Bash + Helm + ArgoCD
-
-### Features
-
-- **5 Complete Micreservice**: `backup`, `deploy`, `health`, `secret`, `cost`
-- **FastAPI REST API** با OpenAPI
-- **Bash Orchestrator** با `set -euo pipefail`
-- **Helm Charts** با `values-prod.yaml`, `values-dev.yaml`
-- **ArgoCD GitOps** با `App of Apps`
-- **SOPS + sealed-secrets** برای secret management
-- **Trivy + Cosign + SBOM** #To Containers Security
-**Zero secrets in code** — Push Protection فعال
-
-### Architecture
-
-```mermaid
-graph TD
-    A[ArgoCD] --> B[Helm Charts]
-    B --> C[FastAPI + Bash]
-    C --> D[Kubernetes]
+├── lib/            shared libraries (logging, retry, lock, validator, utils)
+├── tests/          shared BATS helper
+├── days/dayNN/     one self-contained lesson each (README.md + scripts/ + tests/)
+├── projects/       capstone projects (Phase 5+)
+├── platform/       Kubernetes / ArgoCD / policies / monitoring (Phase 6)
+├── docs/           curriculum.md index + reference notes
+└── .github/        CI · Security · Release workflows
 ```
 
+## 🔒 Quality gates (active from Day 1)
 
-## Secret Management (Production-Grade)
+- **pre-commit** — shfmt + shellcheck + gitleaks + hygiene hooks. Run per day on
+  only that day's files:
+  `pre-commit run --files days/dayNN/scripts/*.sh days/dayNN/tests/*.bats`
+  or across the whole repo with `pre-commit run --all-files`.
+- **BATS** — every day has a suite; `bats -r days` runs them all.
+- **CI** — `.github/workflows/` runs lint + tests + security on every push.
 
-- **No secrets in code** — Active Push Protection
-- **SOPS + GitHub Actions**
-- **Secret in runtime**
-```bash
-  env:
-    - name: SLACK_WEBHOOK
-      valueFrom:
-        secretKeyRef:
-          name: alertmanager-secrets
-          key: webhook_url
-```
-## Day 17: CI/CD Scripts
-```bash
-bash-mastery-devops/
-├── Containerfile                  ← root of repo (standard!)
-├── README.md
-├── .github/
-│   └── workflows/
-│       └── ci-cd-pro.yaml             ← GitHub Actions pipeline
-└── scripts/
-│   └── ci-cd-pro/
-│       ├── ci-cd.sh               ← orchestrator (main entrypoint)
-│       ├── steps/
-│       │   ├── 10-lint.sh
-│       │   ├── 20-test.sh
-│       │   ├── 30-build.sh
-│       │   ├── 40-scan.sh
-│       │   ├── 50-publish.sh
-│       │   └── 60-promote.sh
-│       └── lib/
-│           └── log.sh             ← shared logging functions
-└── k8s/
-    │
-    └── overlays/production/kustomization.yaml ← created for promotion
-```
+## 🤝 Contributing
+
+See **[CONTRIBUTING.md](CONTRIBUTING.md)** for the "day contract" every folder follows.
+
+<div align="center"><sub>MIT licensed · one concept per day · test everything</sub></div>

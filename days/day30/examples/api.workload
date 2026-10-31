@@ -1,0 +1,7 @@
+# Hot: uses ~92% of its CPU request → RISK of throttling/OOM
+name        = api
+replicas    = 3
+cpu_request = 250
+mem_request = 256
+cpu_usage   = 230
+mem_usage   = 180

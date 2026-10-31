@@ -1,0 +1,33 @@
+# Real Kubernetes manifest — this is what ArgoCD applies to the cluster.
+# It is ALSO what the offline sync-app.sh copies (offline just hashes files,
+# so real YAML works in both modes). Edit this file, commit, and push to see
+# ArgoCD reconcile the change into the cluster.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app.kubernetes.io/name: frontend
+    app.kubernetes.io/managed-by: day27-argocd
+spec:
+  replicas: 3          # <-- change me (e.g. 3 -> 5), commit, push, watch ArgoCD self-heal
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.25      # <-- or bump the image tag and push
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi

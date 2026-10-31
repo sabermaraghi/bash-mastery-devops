@@ -1,0 +1,37 @@
+# Day 23 CI/CD for the capstone project. Runs fully offline (no cluster): it
+# validates the capstone layout, lints the shell, and runs the offline BATS
+# suite — the same quality gate the daily lessons use, applied to the capstone.
+name: capstone
+
+on:
+  push:
+    paths:
+      - "projects/devops-platform/**"
+      - ".github/workflows/capstone.yml"
+  pull_request:
+    paths:
+      - "projects/devops-platform/**"
+      - ".github/workflows/capstone.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate capstone layout (offline)
+        run: bash projects/devops-platform/capstone.sh validate
+
+      - name: Shellcheck the capstone scripts
+        run: |
+          sudo apt-get update && sudo apt-get install -y shellcheck
+          shellcheck -x -S error \
+            projects/devops-platform/capstone.sh \
+            projects/devops-platform/services/backend/app/server.sh
+
+      - name: Install bats
+        run: |
+          sudo apt-get install -y bats
+
+      - name: Run capstone tests (offline)
+        run: bats projects/devops-platform/tests

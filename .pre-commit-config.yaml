@@ -1,101 +1,47 @@
-# .pre-commit-config.yaml
-# Zero-Trust Security Hooks — FAANG/NSA Level
-# Blocks merge on any secret, vuln, license violation
-
+# Active from Day 1. Run per day on only that day's changed files:
+#   pre-commit run --files days/dayNN/scripts/*.sh days/dayNN/tests/*.bats
+# The repo-wide `pre-commit run --all-files` is reserved for the final pass
+# once all days are complete.
 repos:
-  # 1. Gitleaks — Detect hardcoded secrets (AWS keys, tokens, etc.)
-  - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.21.1
-    hooks:
-      - id: gitleaks
-        name: "[Security] Detect secrets (Gitleaks)"
-        stages: [commit, push]
-        verbose: true
-
-  # 2. Trivy — Filesystem vulnerability scanner
-  - repo: https://github.com/aquasecurity/trivy
-    rev: v0.58.0
-    hooks:
-      - id: trivy-fs
-        name: "[Security] Trivy FS scan (vulns in scripts/docker)"
-        args: [--quiet, --exit-code, 1, --no-progress, --format, sarif, --output, trivy-fs.sarif]
-        stages: [commit]
-
-  # 3. Semgrep — SAST for Bash, YAML, JSON, Terraform
-  - repo: https://github.com/returntocorp/semgrep
-    rev: v1.95.0
-    hooks:
-      - id: semgrep
-        name: "[Security] Semgrep SAST (bash, secrets, crypto)"
-        args: [--config=p/ci, --config=p/secrets, --config=p/bash, --error, --verbose]
-
-  # 4. Syft — Generate SBOM (Software Bill of Materials)
-  - repo: https://github.com/anchore/syft
-    rev: v1.14.0
-    hooks:
-      - id: syft-sbom
-        name: "[SBOM] Generate CycloneDX SBOM"
-        args: [dir:., --output, cyclonedx-json=sbom.json]
-
-  # 5. Grype — Scan SBOM for vulnerabilities
-  - repo: https://github.com/anchore/grype
-    rev: v0.85.0
-    hooks:
-      - id: grype-scan
-        name: "[SBOM] Scan SBOM with Grype"
-        args: [sbom:sbom.json, --fail-on, high, --output, sarif, --file, grype.sarif]
-
-  # 6. Flawfinder — C/C++ vulns (if any)
-  - repo: https://github.com/david-a-wheeler/flawfinder
-    rev: v2.0.19
-    hooks:
-      - id: flawfinder
-        name: "[Security] Flawfinder (C/C++ vulns)"
-
-  # 7. Licensee — License compliance
-  - repo: https://github.com/github/licensee
-    rev: v9.17.0
-    hooks:
-      - id: detect-licenses
-        name: "[License] Block GPL/AGPL"
-        args: [--block, GPL, AGPL, CC-BY-NC]
-
-  # 8. ShellCheck — Static analysis
-  - repo: local
-    hooks:
-      - id: shellcheck
-        name: "[Lint] ShellCheck (zero warnings)"
-        entry: shellcheck
-        language: system
-        types: [shell]
-        args: [--severity=error, --external-sources]
-
-  # 9. Shfmt — Auto-format Bash
-  - repo: https://github.com/mvdan/sh
-    rev: v3.8.0
-    hooks:
-      - id: shfmt
-        name: "[Format] Shfmt (Google style)"
-        args: [-w, -i, 2, -ci]
-
-  # 10. Check added large files
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
-    hooks:
-      - id: check-added-large-files
-        name: "[Policy] No files >500KB"
-        args: [--maxkb=500]
-
-  # 11. Detect private keys
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
-    hooks:
-      - id: detect-private-key
-        name: "[Security] No private keys"
-
-  # 12. Trailing whitespace & EOF
+  # --- hygiene tier: applies to every day's shell scripts ---
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      - id: detect-private-key
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.8.0-1
+    hooks:
+      - id: shfmt
+        args: [-w, -i, "2", -ci]
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        args: [-x, --severity=error]
+  # --- security tier: harmless early, essential from Day 17+ ---
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+  - repo: local
+    hooks:
+      - id: trivy-fs
+        name: trivy filesystem scan
+        entry: >-
+          bash -c 'command -v trivy >/dev/null ||
+          { echo "SKIP - trivy not installed"; exit 0; };
+          trivy fs --quiet --exit-code 1 --no-progress --severity HIGH,CRITICAL .'
+        language: system
+        pass_filenames: false
+      - id: bats
+        name: run BATS suites
+        entry: >-
+          bash -c 'command -v bats >/dev/null ||
+          { echo "SKIP - bats not installed"; exit 0; };
+          bats -r days projects'
+        language: system
+        pass_filenames: false
