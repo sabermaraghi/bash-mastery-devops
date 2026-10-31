@@ -1,0 +1,7 @@
+# Example CI pipeline — one stage per line:  name = shell command
+# Run it:  bash days/day23/scripts/ci-run.sh days/day23/examples/pipeline.ci
+
+lint   = echo linting... && true
+test   = echo running unit tests... && true
+build  = echo building artifact... && true
+publish = echo publishing... && true

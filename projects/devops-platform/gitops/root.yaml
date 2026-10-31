@@ -1,0 +1,28 @@
+# Root Application (app-of-apps). Apply this ONE manifest and ArgoCD discovers
+# and syncs every child Application under gitops/apps/ — which in turn deploy the
+# backend and frontend services. This is the single entry point the capstone
+# driver applies in `capstone.sh deploy`.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-root
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ericvalijani/bash-mastery-devops.git
+    targetRevision: HEAD
+    path: projects/devops-platform/gitops/apps
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

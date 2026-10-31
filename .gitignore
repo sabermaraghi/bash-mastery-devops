@@ -1,15 +1,32 @@
-# Temp files
+# secrets & local config
+.env
+*.secret
+*.key
+**/config.env
+
+# logs & reports
 *.log
-*.tmp
-temp/
+log-report-*.txt
+*-report-*.txt
+*-report-*.json
 
-# OS files
-.DS_Store
-Thumbs.db
+# artifacts
+sbom-*.json
+*.tar.gz
 
-# Editor files
-.vscode/
-*.swp
+# terraform: local state, provider binaries and generated kubeconfigs.
+# terraform.tfstate stores the kind provider's kubeconfig -- including
+# client_certificate and client_key -- in PLAINTEXT, and .terraform/ holds ~40MB
+# of provider binaries that do not belong in Git. .terraform.lock.hcl is NOT
+# ignored on purpose: that one should be committed so provider versions pin.
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
 
-# Bash specifics
-*.bak
+# The kind provider writes the cluster kubeconfig next to main.tf as
+# <cluster_name>-config (e.g. bash-mastery-config). It contains admin
+# credentials for the cluster.
+**/infra/*-config
